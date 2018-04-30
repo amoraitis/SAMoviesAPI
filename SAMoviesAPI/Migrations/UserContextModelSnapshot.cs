@@ -25,9 +25,13 @@ namespace SAMoviesAPI.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Favorites");
+
                     b.Property<string>("Name");
 
                     b.Property<string>("Password");
+
+                    b.Property<string>("Seens");
 
                     b.Property<string>("Username");
 

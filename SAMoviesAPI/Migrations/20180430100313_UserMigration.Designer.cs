@@ -11,8 +11,8 @@ using System;
 namespace SAMoviesAPI.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20180428170834_UserTableMigration")]
-    partial class UserTableMigration
+    [Migration("20180430100313_UserMigration")]
+    partial class UserMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,9 +26,13 @@ namespace SAMoviesAPI.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Favorites");
+
                     b.Property<string>("Name");
 
                     b.Property<string>("Password");
+
+                    b.Property<string>("Seens");
 
                     b.Property<string>("Username");
 

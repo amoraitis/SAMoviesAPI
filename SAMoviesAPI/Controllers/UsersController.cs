@@ -11,7 +11,7 @@ using SAMoviesAPI.Models;
 namespace SAMoviesAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Users")]
+    [Route("api/users")]
     public class UsersController : Controller
     {
         private readonly UserContext _context;

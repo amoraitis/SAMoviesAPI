@@ -15,5 +15,9 @@ namespace SAMoviesAPI.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public string Name { get; set; }
+        //json list of int
+        public string Favorites { get; set; }
+        //json list of int
+        public string Seens { get; set; }
     }
 }

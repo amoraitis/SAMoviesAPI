@@ -28,6 +28,42 @@ namespace SAMoviesAPI.Controllers
             return _context.Users;
         }
 
+        [HttpGet("login")]
+        public async Task<IActionResult> GetUserByUserName([FromQuery] string username, [FromQuery] string password)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _context.Users.SingleOrDefaultAsync(m => m.Username == username && m.Password == password);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
+        [HttpGet("exist/{username}")]
+        public async Task<IActionResult> UserExist([FromRoute] string username)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _context.Users.SingleOrDefaultAsync(m => m.Username == username);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok();
+        }
+
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser([FromRoute] int id)

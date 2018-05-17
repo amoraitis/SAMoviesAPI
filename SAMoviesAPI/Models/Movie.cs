@@ -26,12 +26,15 @@ namespace SAMoviesAPI.Models
     {
         [Key]
         public int UserId { get; set; }
+        public string UserFullname { get; set; }
+        [Range(1,10)]
         public int Rate { get; set; }
     }
     public class Comment
     {
         [Key]
         public int UserId { get; set; }
+        public string UserFullname { get; set; }
         public string Content { get; set; }
     }
 }

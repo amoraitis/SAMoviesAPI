@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SAMoviesAPI.Migrations.Movie
 {
-    public partial class MoviesMigration : Migration
+    public partial class Movie : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,7 +28,8 @@ namespace SAMoviesAPI.Migrations.Movie
                     UserId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Content = table.Column<string>(nullable: true),
-                    MovieId = table.Column<int>(nullable: true)
+                    MovieId = table.Column<int>(nullable: true),
+                    UserFullname = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -48,7 +49,8 @@ namespace SAMoviesAPI.Migrations.Movie
                     UserId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     MovieId = table.Column<int>(nullable: true),
-                    Rate = table.Column<int>(nullable: false)
+                    Rate = table.Column<int>(nullable: false),
+                    UserFullname = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

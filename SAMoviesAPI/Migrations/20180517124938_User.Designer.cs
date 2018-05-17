@@ -11,8 +11,8 @@ using System;
 namespace SAMoviesAPI.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20180430100313_UserMigration")]
-    partial class UserMigration
+    [Migration("20180517124938_User")]
+    partial class User
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

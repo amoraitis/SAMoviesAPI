@@ -29,6 +29,8 @@ namespace SAMoviesAPI.Migrations.Movie
 
                     b.Property<int?>("MovieId");
 
+                    b.Property<string>("UserFullname");
+
                     b.HasKey("UserId");
 
                     b.HasIndex("MovieId");
@@ -54,6 +56,8 @@ namespace SAMoviesAPI.Migrations.Movie
                     b.Property<int?>("MovieId");
 
                     b.Property<int>("Rate");
+
+                    b.Property<string>("UserFullname");
 
                     b.HasKey("UserId");
 

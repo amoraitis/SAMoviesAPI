@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SAMoviesAPI.Migrations
 {
-    public partial class UserMigration : Migration
+    public partial class User : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

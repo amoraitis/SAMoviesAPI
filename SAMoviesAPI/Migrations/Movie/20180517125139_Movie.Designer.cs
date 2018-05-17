@@ -11,8 +11,8 @@ using System;
 namespace SAMoviesAPI.Migrations.Movie
 {
     [DbContext(typeof(MovieContext))]
-    [Migration("20180430100607_MoviesMigration")]
-    partial class MoviesMigration
+    [Migration("20180517125139_Movie")]
+    partial class Movie
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,6 +29,8 @@ namespace SAMoviesAPI.Migrations.Movie
                     b.Property<string>("Content");
 
                     b.Property<int?>("MovieId");
+
+                    b.Property<string>("UserFullname");
 
                     b.HasKey("UserId");
 
@@ -55,6 +57,8 @@ namespace SAMoviesAPI.Migrations.Movie
                     b.Property<int?>("MovieId");
 
                     b.Property<int>("Rate");
+
+                    b.Property<string>("UserFullname");
 
                     b.HasKey("UserId");
 

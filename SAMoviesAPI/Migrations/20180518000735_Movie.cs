@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
-namespace SAMoviesAPI.Migrations.Movie
+namespace SAMoviesAPI.Migrations
 {
     public partial class Movie : Migration
     {
@@ -13,32 +13,34 @@ namespace SAMoviesAPI.Migrations.Movie
                 name: "Movies",
                 columns: table => new
                 {
+                    Key = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Movies", x => x.Id);
+                    table.PrimaryKey("PK_Movies", x => x.Key);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Comment",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(nullable: false)
+                    Key = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Content = table.Column<string>(nullable: true),
-                    MovieId = table.Column<int>(nullable: true),
-                    UserFullname = table.Column<string>(nullable: true)
+                    MovieKey = table.Column<int>(nullable: true),
+                    UserFullname = table.Column<string>(nullable: true),
+                    UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comment", x => x.UserId);
+                    table.PrimaryKey("PK_Comment", x => x.Key);
                     table.ForeignKey(
-                        name: "FK_Comment_Movies_MovieId",
-                        column: x => x.MovieId,
+                        name: "FK_Comment_Movies_MovieKey",
+                        column: x => x.MovieKey,
                         principalTable: "Movies",
-                        principalColumn: "Id",
+                        principalColumn: "Key",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -46,32 +48,33 @@ namespace SAMoviesAPI.Migrations.Movie
                 name: "Rating",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(nullable: false)
+                    Key = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    MovieId = table.Column<int>(nullable: true),
+                    MovieKey = table.Column<int>(nullable: true),
                     Rate = table.Column<int>(nullable: false),
-                    UserFullname = table.Column<string>(nullable: true)
+                    UserFullname = table.Column<string>(nullable: true),
+                    UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rating", x => x.UserId);
+                    table.PrimaryKey("PK_Rating", x => x.Key);
                     table.ForeignKey(
-                        name: "FK_Rating_Movies_MovieId",
-                        column: x => x.MovieId,
+                        name: "FK_Rating_Movies_MovieKey",
+                        column: x => x.MovieKey,
                         principalTable: "Movies",
-                        principalColumn: "Id",
+                        principalColumn: "Key",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comment_MovieId",
+                name: "IX_Comment_MovieKey",
                 table: "Comment",
-                column: "MovieId");
+                column: "MovieKey");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rating_MovieId",
+                name: "IX_Rating_MovieKey",
                 table: "Rating",
-                column: "MovieId");
+                column: "MovieKey");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

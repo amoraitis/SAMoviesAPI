@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
-namespace SAMoviesAPI.Migrations
+namespace SAMoviesAPI.Migrations.User
 {
     public partial class User : Migration
     {

@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore.Storage.Internal;
 using SAMoviesAPI.Contexts;
 using System;
 
-namespace SAMoviesAPI.Migrations
+namespace SAMoviesAPI.Migrations.User
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20180517124938_User")]
+    [Migration("20180518000839_User")]
     partial class User
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

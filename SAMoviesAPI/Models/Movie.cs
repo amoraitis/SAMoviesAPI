@@ -9,6 +9,7 @@ namespace SAMoviesAPI.Models
     public class Movie
     {
         [Key]
+        public int Key { get; set; }
         public int Id { get; set; }
         public ICollection<Rating> Ratings { get; set; }
         public ICollection<Comment> Comments { get; set; }
@@ -25,6 +26,7 @@ namespace SAMoviesAPI.Models
     public class Rating
     {
         [Key]
+        public int Key { get; set; }
         public int UserId { get; set; }
         public string UserFullname { get; set; }
         [Range(1,10)]
@@ -33,6 +35,7 @@ namespace SAMoviesAPI.Models
     public class Comment
     {
         [Key]
+        public int Key { get; set; }
         public int UserId { get; set; }
         public string UserFullname { get; set; }
         public string Content { get; set; }

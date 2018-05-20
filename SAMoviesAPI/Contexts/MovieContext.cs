@@ -15,5 +15,14 @@ namespace SAMoviesAPI.Contexts
         }
 
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Rating> Ratings{ get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Movie>().ToTable("Movie");
+            modelBuilder.Entity<Comment>().ToTable("Comment");
+            modelBuilder.Entity<Rating>().ToTable("Rating");
+        }
     }
 }

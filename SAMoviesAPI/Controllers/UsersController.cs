@@ -21,13 +21,23 @@ namespace SAMoviesAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Users
+        /// <summary>
+        /// Returns the list of the Users.
+        /// </summary>
         [HttpGet]
         public IEnumerable<User> GetUsers()
         {
             return _context.Users;
         }
 
+        /// <summary>
+        /// Finds a User by username and password.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        [ProducesResponseType(typeof(User), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [HttpGet("login")]
         public async Task<IActionResult> GetUserByUserName([FromQuery] string username, [FromQuery] string password)
         {
@@ -46,6 +56,14 @@ namespace SAMoviesAPI.Controllers
             return Ok(user);
         }
 
+
+        /// <summary>
+        /// Find a User by username.
+        /// </summary>
+        /// <param name="username"></param>
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [HttpGet("exist/{username}")]
         public async Task<IActionResult> UserExist([FromRoute] string username)
         {
@@ -64,7 +82,13 @@ namespace SAMoviesAPI.Controllers
             return NoContent();
         }
 
-        // GET: api/Users/5
+        /// <summary>
+        /// Find a User by id.
+        /// </summary>
+        /// <param name="id"></param>
+        [ProducesResponseType(typeof(User), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser([FromRoute] int id)
         {
@@ -83,11 +107,18 @@ namespace SAMoviesAPI.Controllers
             return Ok(user);
         }
 
-        // PUT: api/Users/5
+        /// <summary>
+        /// Update an existing User.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || user == null)
             {
                 return BadRequest(ModelState);
             }
@@ -111,47 +142,71 @@ namespace SAMoviesAPI.Controllers
                 }
                 else
                 {
-                    throw;
+                    return BadRequest(Json("Couldn't update item!"));
                 }
             }
 
             return NoContent();
         }
 
-        // POST: api/Users
+        /// <summary>
+        /// Creates a User.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>A newly created User</returns>
+        [ProducesResponseType(typeof(User), 201)]
+        [ProducesResponseType(400)]
         [HttpPost]
         public async Task<IActionResult> PostUser([FromBody] User user)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid || user == null)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
             }
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
+            catch (Exception)
+            {
+                return BadRequest(Json("Couldn't create item!"));
+            }
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
 
-        // DELETE: api/Users/5
+        /// <summary>
+        /// Deletes a User.
+        /// </summary>
+        /// <param name="id"></param>
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var user = await _context.Users.SingleOrDefaultAsync(m => m.Id == id);
-            if (user == null)
+                var user = await _context.Users.SingleOrDefaultAsync(m => m.Id == id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
             {
-                return NotFound();
+                return BadRequest(Json("Couldn't delete item!"));
             }
-
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return Ok(user);
+            return NoContent();
         }
 
         private bool UserExists(int id)

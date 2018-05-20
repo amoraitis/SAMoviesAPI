@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SAMoviesAPI.Contexts;
 using SAMoviesAPI.Models;
 
@@ -21,21 +22,64 @@ namespace SAMoviesAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Movies
+        /// <summary>
+        /// Returns the list of the Movies.
+        /// </summary>
         [HttpGet]
         public IEnumerable<Movie> GetMovies()
         {
-            return _context.Movies;
+            return _context.Movies.Include(m => m.Comments)
+                .Include(m => m.Ratings).AsNoTracking();
         }
 
-        // GET: api/Movies/sorted
+        /// <summary>
+        /// Returns the average rating of a specific movie.
+        /// </summary>
+        /// <param name="id"></param>
+        [ProducesResponseType(typeof(String), 200)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [HttpGet("{id}/rating")]
+        public async Task<IActionResult> GetMovieAverageRating([FromRoute] int id)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var movie = await _context.Movies.Include(m => m.Ratings).SingleOrDefaultAsync(m => m.Id == id);
+            
+
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            var movieAverageRating = movie.GetAverageRating();
+            if(movieAverageRating == -1.0)
+            {
+                return NoContent();
+            }
+            return Json(movie.GetAverageRating());
+        }
+
+        /// <summary>
+        /// Returns the list of the Movies sorted by rating.
+        /// </summary>
+        [ProducesResponseType(typeof(IEnumerable<Movie>), 200)]
         [HttpGet("sorted")]
         public IActionResult GetMoviesSorted()
         {
-                    return Ok(SortedMoviesbyRating());
+            return Ok(SortedMoviesbyRating());
         }
 
-        // GET: api/Movies/5
+        /// <summary>
+        /// Find a Movie by id.
+        /// </summary>
+        /// <param name="id"></param>
+        [ProducesResponseType(typeof(Movie), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMovie([FromRoute] int id)
         {
@@ -44,7 +88,8 @@ namespace SAMoviesAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var movie = await _context.Movies.SingleOrDefaultAsync(m => m.Id == id);
+            var movie = await _context.Movies.Include(m=>m.Comments)
+                .Include(m=>m.Ratings).AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
 
             if (movie == null)
             {
@@ -54,11 +99,18 @@ namespace SAMoviesAPI.Controllers
             return Ok(movie);
         }
 
-        // PUT: api/Movies/5
+        /// <summary>
+        /// Update an existing Movie.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="movie"></param>
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMovie([FromRoute] int id, [FromBody] Movie movie)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || movie == null)
             {
                 return BadRequest(ModelState);
             }
@@ -82,47 +134,80 @@ namespace SAMoviesAPI.Controllers
                 }
                 else
                 {
-                    throw;
+                    return BadRequest(Json("Couldn't update item!"));
                 }
             }
 
             return NoContent();
         }
 
-        // POST: api/Movies
+        /// <summary>
+        /// Creates a Movie.
+        /// </summary>
+        /// <param name="movie"></param>
+        /// <returns>A newly created Movie</returns>
+        [ProducesResponseType(typeof(Movie), 201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(409)]
         [HttpPost]
         public async Task<IActionResult> PostMovie([FromBody] Movie movie)
         {
-            if (!ModelState.IsValid)
+            try {
+
+                if (!ModelState.IsValid || movie == null)
+                {
+                    return BadRequest(ModelState);
+                }
+                bool itemExists = _context.Movies.Any(m => m.Id == movie.Id);
+                if (itemExists)
+                {
+                    return StatusCode(StatusCodes.Status409Conflict, Json("Movie with the specific id already exists!"));
+                }
+                _context.Movies.Add(movie);
+                await _context.SaveChangesAsync();
+
+
+            }
+            catch (Exception)
             {
-                return BadRequest(ModelState);
+                return BadRequest(Json("Couldn't create item!"));
             }
 
-            _context.Movies.Add(movie);
-            await _context.SaveChangesAsync();
-
             return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);
+
         }
 
-        // DELETE: api/Movies/5
+        /// <summary>
+        /// Deletes a Movie.
+        /// </summary>
+        /// <param name="id"></param>
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var movie = await _context.Movies.SingleOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
+                var movie = await _context.Movies.SingleOrDefaultAsync(m => m.Id == id);
+                if (movie == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Movies.Remove(movie);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
             {
-                return NotFound();
+                return BadRequest(Json("Couldn't delete item!"));
             }
-
-            _context.Movies.Remove(movie);
-            await _context.SaveChangesAsync();
-
-            return Ok(movie);
+            return NoContent();
         }
 
         private bool MovieExists(int id)
@@ -131,7 +216,7 @@ namespace SAMoviesAPI.Controllers
         }
         private IEnumerable<Movie> SortedMoviesbyRating()
         {
-            IEnumerable<Movie> sortedMovies = _context.Movies;
+            IEnumerable<Movie> sortedMovies = _context.Movies.Include(m=>m.Ratings).Include(n=>n.Comments).AsNoTracking();
             sortedMovies.OrderByDescending(s => s.GetAverageRating());
             return sortedMovies;
         }

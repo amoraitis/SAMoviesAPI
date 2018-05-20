@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.Internal;
 using SAMoviesAPI.Contexts;
 using System;
 
-namespace SAMoviesAPI.Migrations
+namespace SAMoviesAPI.Migrations.Movie
 {
     [DbContext(typeof(MovieContext))]
     partial class MovieContextModelSnapshot : ModelSnapshot
@@ -22,52 +22,43 @@ namespace SAMoviesAPI.Migrations
 
             modelBuilder.Entity("SAMoviesAPI.Models.Comment", b =>
                 {
-                    b.Property<int>("Key")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("UserId");
 
                     b.Property<string>("Content");
 
-                    b.Property<int?>("MovieKey");
+                    b.Property<int?>("MovieId");
 
                     b.Property<string>("UserFullname");
 
-                    b.Property<int>("UserId");
+                    b.HasKey("UserId");
 
-                    b.HasKey("Key");
-
-                    b.HasIndex("MovieKey");
+                    b.HasIndex("MovieId");
 
                     b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("SAMoviesAPI.Models.Movie", b =>
                 {
-                    b.Property<int>("Key")
-                        .ValueGeneratedOnAdd();
-
                     b.Property<int>("Id");
 
-                    b.HasKey("Key");
+                    b.HasKey("Id");
 
-                    b.ToTable("Movies");
+                    b.ToTable("Movie");
                 });
 
             modelBuilder.Entity("SAMoviesAPI.Models.Rating", b =>
                 {
-                    b.Property<int>("Key")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("UserId");
 
-                    b.Property<int?>("MovieKey");
+                    b.Property<int?>("MovieId");
 
                     b.Property<int>("Rate");
 
                     b.Property<string>("UserFullname");
 
-                    b.Property<int>("UserId");
+                    b.HasKey("UserId");
 
-                    b.HasKey("Key");
-
-                    b.HasIndex("MovieKey");
+                    b.HasIndex("MovieId");
 
                     b.ToTable("Rating");
                 });
@@ -76,14 +67,14 @@ namespace SAMoviesAPI.Migrations
                 {
                     b.HasOne("SAMoviesAPI.Models.Movie")
                         .WithMany("Comments")
-                        .HasForeignKey("MovieKey");
+                        .HasForeignKey("MovieId");
                 });
 
             modelBuilder.Entity("SAMoviesAPI.Models.Rating", b =>
                 {
                     b.HasOne("SAMoviesAPI.Models.Movie")
                         .WithMany("Ratings")
-                        .HasForeignKey("MovieKey");
+                        .HasForeignKey("MovieId");
                 });
 #pragma warning restore 612, 618
         }

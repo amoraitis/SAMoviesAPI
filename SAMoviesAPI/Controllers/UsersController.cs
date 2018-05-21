@@ -153,7 +153,7 @@ namespace SAMoviesAPI.Controllers
         /// Creates a User.
         /// </summary>
         /// <param name="user"></param>
-        /// <returns>A newly created User</returns>
+        /// <returns>A newly created User</returns> 
         [ProducesResponseType(typeof(User), 201)]
         [ProducesResponseType(400)]
         [HttpPost]

@@ -23,7 +23,8 @@ namespace SAMoviesAPI
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //services.AddDbContext<MovieContext>(opt => opt.UseInMemoryDatabase("movies"));
+            //services.AddDbContext<MovieContext>(opt => opt.UseInMemoryDatabase("movies"))
+            //        .AddDbContext<UserContext>(opt=>opt.UseInMemoryDatabase("users"));
             services.AddDbContext<UserContext>(
                 options => options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));

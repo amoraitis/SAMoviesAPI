@@ -12,6 +12,11 @@ namespace SAMoviesAPI.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
+        public string Title { get; set; }
+        public string Poster_path { get; set; }
+        public string Genre_ids { get; set; }
+        public string Overview { get; set; }
+        public string Release_date { get; set; }
         public ICollection<Rating> Ratings { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public double GetAverageRating()

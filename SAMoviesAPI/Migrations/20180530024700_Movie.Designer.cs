@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore.Storage.Internal;
 using SAMoviesAPI.Contexts;
 using System;
 
-namespace SAMoviesAPI.Migrations.Movie
+namespace SAMoviesAPI.Migrations
 {
     [DbContext(typeof(MovieContext))]
-    [Migration("20180520170751_Movie")]
+    [Migration("20180530024700_Movie")]
     partial class Movie
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,6 +41,16 @@ namespace SAMoviesAPI.Migrations.Movie
             modelBuilder.Entity("SAMoviesAPI.Models.Movie", b =>
                 {
                     b.Property<int>("Id");
+
+                    b.Property<string>("Genre_ids");
+
+                    b.Property<string>("Overview");
+
+                    b.Property<string>("Poster_path");
+
+                    b.Property<string>("Release_date");
+
+                    b.Property<string>("Title");
 
                     b.HasKey("Id");
 

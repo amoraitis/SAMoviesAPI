@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SAMoviesAPI.Migrations.Movie
+namespace SAMoviesAPI.Migrations
 {
     public partial class Movie : Migration
     {
@@ -12,7 +12,12 @@ namespace SAMoviesAPI.Migrations.Movie
                 name: "Movie",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false),
+                    Genre_ids = table.Column<string>(nullable: true),
+                    Overview = table.Column<string>(nullable: true),
+                    Poster_path = table.Column<string>(nullable: true),
+                    Release_date = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

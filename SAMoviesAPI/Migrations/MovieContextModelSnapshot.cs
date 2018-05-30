@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.Internal;
 using SAMoviesAPI.Contexts;
 using System;
 
-namespace SAMoviesAPI.Migrations.Movie
+namespace SAMoviesAPI.Migrations
 {
     [DbContext(typeof(MovieContext))]
     partial class MovieContextModelSnapshot : ModelSnapshot
@@ -40,6 +40,16 @@ namespace SAMoviesAPI.Migrations.Movie
             modelBuilder.Entity("SAMoviesAPI.Models.Movie", b =>
                 {
                     b.Property<int>("Id");
+
+                    b.Property<string>("Genre_ids");
+
+                    b.Property<string>("Overview");
+
+                    b.Property<string>("Poster_path");
+
+                    b.Property<string>("Release_date");
+
+                    b.Property<string>("Title");
 
                     b.HasKey("Id");
 

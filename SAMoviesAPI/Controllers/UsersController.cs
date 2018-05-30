@@ -47,7 +47,6 @@ namespace SAMoviesAPI.Controllers
             }
 
             var user = await _context.Users
-                .Include(m =>m.Favorites).Include(n=>n.Seens)
                 .SingleOrDefaultAsync(m => m.Username == username && m.Password == password);
 
             if (user == null)
